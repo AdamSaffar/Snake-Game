@@ -3,13 +3,30 @@
   padding: 0;
   box-sizing: border-box;
 }
-body { 
-  min-height: 100vh;  
-  display: flex; 
-  align-items: center;
-  justify-content: center;
+div { 
+  position: relative; /* Essential: This acts as the anchor for the canvases */
+  width: 750px;       /* Must match canvas.width */
+  height: 600px;      /* Must match canvas.height */
+  
+  /* This is the easiest way to center the DIV itself on the page */
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-canvas {
-  display: block;
+.static-grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
   border: 5px solid blue;
 } 
+
+.dynamic-foreground {
+  border: 5px solid red; 
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}

@@ -1,19 +1,20 @@
-const canvas = document.querySelector('canvas'); 
-canvas.height = 600; 
-canvas.width = 750;
+const gridCanvas = document.querySelector('.static-grid'); 
+const gameCanvas = document.querySelector('.dynamic-foreground');
+gameCanvas.height = gridCanvas.height = 650; 
+gameCanvas.width = gridCanvas.width = 750;
 
 let sizeOfSquare = 50;
-let lastColor;
 
-const c = canvas.getContext('2d');
+const bground = gridCanvas.getContext('2d');
+const fground = gameCanvas.getContext('2d');
 // 15 row
-for(let row = 0; row < canvas.width; row += sizeOfSquare) {
-  // 12 col
-  for (let col = 0; col < canvas.height; col += sizeOfSquare) {
+for(let row = 0; row < gridCanvas.width; row += sizeOfSquare) {
+  // 13 col
+  for (let col = 0; col < gridCanvas.height; col += sizeOfSquare) {
     // set color of square based on index
     const isEven = (row / sizeOfSquare + col / sizeOfSquare) % 2 === 0; 
-    c.fillStyle = isEven ? "black" : "gray";
-    c.fillRect(row,col,sizeOfSquare,sizeOfSquare);
+    bground.fillStyle = isEven ? "black" : "gray";
+    bground.fillRect(row,col,sizeOfSquare,sizeOfSquare);
 
   }
 }
@@ -26,17 +27,41 @@ for(let row = 0; row < canvas.width; row += sizeOfSquare) {
 */
 class Snake {
   // Snake class fields
-  boundX = null; // x-boundary
-  boundY = null;  // y-boundary
-  dx = null; 
-  dy = null; 
-  constructor(config) {
+  xOrigin = sizeOfSquare * 5;  
+  yOrigin = sizeOfSquare * 7;
+  dx = 50; 
+  dy = 50; 
+  constructor(x, y) {
+    // coordinates of snake origin
+    this.x = x;
+    this.y = y;
+    this.width = sizeOfSquare;
+    this.height = sizeOfSquare;
+  }
+
+  draw() {
+    //c.fillStyle = "green";
+    //c.fillRect(this.x, this.y, sizeOfSquare, sizeOfSquare);
+  }
+
+  update() {
+    //c.clearRect(this.x,this.y, sizeOfSquare, sizeOfSquare);
+    //this.x += this.dx;
+    //this.draw();
 
   }
 }
 
-//const snake = new Snake(); 
+class Apple {
 
+  constructor() {
+
+  }
+}
+
+//const snake = new Snake(sizeOfSquare * 5, sizeOfSquare * 7); 
+//snake.draw();
+//snake.update();
 //const apple = new Apple();
 
 /*
