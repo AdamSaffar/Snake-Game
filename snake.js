@@ -1,3 +1,23 @@
+const canvas = document.querySelector('canvas'); 
+canvas.height = 600; 
+canvas.width = 750;
+
+let sizeOfSquare = 50;
+let lastColor;
+
+const c = canvas.getContext('2d');
+// 15 row
+for(let row = 0; row < canvas.width; row += sizeOfSquare) {
+  // 12 col
+  for (let col = 0; col < canvas.height; col += sizeOfSquare) {
+    // set color of square based on index
+    const isEven = (row / sizeOfSquare + col / sizeOfSquare) % 2 === 0; 
+    c.fillStyle = isEven ? "black" : "gray";
+    c.fillRect(row,col,sizeOfSquare,sizeOfSquare);
+
+  }
+}
+
 /* PROPERTIES OF SNAKE
 * moves(up, down, left, right)
 * eats apple if snakes coordinates and apples coordiantes coincide
@@ -8,8 +28,8 @@ class Snake {
   // Snake class fields
   boundX = null; // x-boundary
   boundY = null;  // y-boundary
-  velocity = null; // speed of snake
-
+  dx = null; 
+  dy = null; 
   constructor(config) {
 
   }
@@ -35,7 +55,7 @@ function show() {
     window.localStorage.getItem("REMEMBER ME!!!");
   }
 }
-
+/* 
 // asnyc timeout 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve,ms));
 
@@ -47,21 +67,11 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve,ms));
   console.log("Reloading now!");
   window.location.reload(); 
 })();
-/*
-runGame();
-document.querySelector()
-localStorage.setItem("")
-await sleep(2000);
-document.body.innerHTML = "";
-await sleep(2000);
-*/
 
+*/
 // if last keystroke is the same, no change needed
 let lastKeyDown;
-/* 
-captures users keystrokes
-only valid inputs are: WASD or ArrowUp,ArrowDown,ArrowLeft,ArrowRight 
-*/
+// captures users keystroke inputs
 document.addEventListener("keydown", (event) => {
   if((event.key == "w" || event.key == "ArrowUp") &&  lastKeyDown !== event.key) {
     lastKeyDown = event.key; // update lastKeyDown 
