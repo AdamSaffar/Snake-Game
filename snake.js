@@ -40,14 +40,14 @@ class Snake {
   }
 
   draw() {
-    //c.fillStyle = "green";
-    //c.fillRect(this.x, this.y, sizeOfSquare, sizeOfSquare);
+    fground.fillStyle = "green";
+    fground.fillRect(this.x, this.y, sizeOfSquare, sizeOfSquare);
   }
 
   update() {
-    //c.clearRect(this.x,this.y, sizeOfSquare, sizeOfSquare);
-    //this.x += this.dx;
-    //this.draw();
+    fground.clearRect(this.x,this.y, sizeOfSquare, sizeOfSquare);
+    this.x += this.dx;
+    this.draw();
 
   }
 }
@@ -59,27 +59,23 @@ class Apple {
   }
 }
 
-//const snake = new Snake(sizeOfSquare * 5, sizeOfSquare * 7); 
-//snake.draw();
-//snake.update();
+const snake = new Snake(sizeOfSquare * 5, sizeOfSquare * 7); 
+snake.draw();
+
 //const apple = new Apple();
+let lastTime = 0;
+let moveInterval = 1000; // 1000ms = 1 s
+function animate(timestamp) {
+  requestAnimationFrame(animate); 
 
-/*
-window.onload = () => {
-  console.log('Page loaded!');
-  runGame();
-}
-*/ 
-function runGame() {
-  //setInterval(show,30); // 30 represents FPS(frames per second) 
-}
+  const deltaTime = timestamp - lastTime;
 
-function show() {
-  //window.location.reload();
-  if(window.localStorage) {
-    window.localStorage.getItem("REMEMBER ME!!!");
+  if(deltaTime >= moveInterval) {
+    snake.update();
+    lastTime = timestamp; 
   }
 }
+animate(0); // pass an initial 0 to start the clock
 /* 
 // asnyc timeout 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve,ms));
