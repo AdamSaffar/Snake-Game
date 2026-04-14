@@ -27,25 +27,31 @@ for(let row = 0; row < gridCanvas.width; row += sizeOfSquare) {
 */
 class Snake {
   // Snake class fields
-  xOrigin = sizeOfSquare * 5;  
-  yOrigin = sizeOfSquare * 7;
+  xOrigin = sizeOfSquare * 4;  
+  yOrigin = sizeOfSquare * 6;
   dx = 0; 
   dy = 0; 
-  constructor(x, y) {
+  constructor() {
     // coordinates of snake origin
-    this.x = x;
-    this.y = y;
+    this.x = this.xOrigin;
+    this.y = this.yOrigin;
     this.width = sizeOfSquare;
     this.height = sizeOfSquare;
   } 
-  reset() {
+  reset(apple) {
+    // reset snake position to origin
     this.x = this.xOrigin;
     this.y = this.yOrigin; 
-    this.dx = 0; // stop movement 
-    this.dy = 0; // stop movement
+    // reset velocity to 0
+    this.dx = 0; 
+    this.dy = 0; 
 
+    // reset apple position to origin
+    apple.x = apple.xOrigin;
+    apple.y = apple.yOrigin; 
     fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
     this.draw();
+    apple.draw();
 
     // IMPORTANT: reset state of lastKeyDown so user can pick any new direction
     lastKeyDown = "";
@@ -77,14 +83,29 @@ class Snake {
 }
 
 class Apple {
+  xOrigin = 10 * sizeOfSquare;
+  yOrigin = 6 * sizeOfSquare;
 
   constructor() {
-
+    this.x = this.xOrigin;
+    this.y = this.yOrigin;
+  }
+  draw() {
+    fground.fillStyle = "red";
+    fground.fillRect(this.x,this.y,sizeOfSquare,sizeOfSquare);
+  }
+  isOverlap(snake) {
+    if(snake.x === apple.x && snake.y === apple.y) {
+      console.log("SNAKE BIT APPLE");
+      return true;
+    }
   }
 }
 
 
-const snake = new Snake(sizeOfSquare * 5, sizeOfSquare * 7); 
+const snake = new Snake(); 
+const apple = new Apple();
+apple.draw();
 snake.draw();
 
 //const apple = new Apple();
@@ -92,9 +113,9 @@ let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec
 function animate(timestamp) {
   requestAnimationFrame(animate); 
-  if(snake.outOfBounds()) {
+  if(snake.outOfBounds() || apple.isOverlap(snake)) {
     console.log("OUT OF BOUNDS!");
-    snake.reset();
+    snake.reset(apple);
     return; // exit the frame immediately
   }
   const deltaTime = timestamp - lastTime;
