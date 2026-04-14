@@ -49,6 +49,7 @@ class Snake {
     // reset apple position to origin
     apple.x = apple.xOrigin;
     apple.y = apple.yOrigin; 
+    // clear canvas
     fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
     this.draw();
     apple.draw();
@@ -94,11 +95,27 @@ class Apple {
     fground.fillStyle = "red";
     fground.fillRect(this.x,this.y,sizeOfSquare,sizeOfSquare);
   }
+  // returns true if snake "bit" apple
   isOverlap(snake) {
     if(snake.x === apple.x && snake.y === apple.y) {
       console.log("SNAKE BIT APPLE");
       return true;
     }
+    return false;
+  }
+  newApple(snake) {
+    // no need to call clearRect() on apple, snake already clears apple
+    let newX;
+    let newY;
+    // keep rolling if new X & Y are equal to snake position
+    do {
+      newX = Math.floor(Math.random() * (gameCanvas.width / sizeOfSquare)) * sizeOfSquare;
+      newY = Math.floor(Math.random() * (gameCanvas.height / sizeOfSquare)) * sizeOfSquare;
+    } while(newX === snake.x && newY === snake.y);
+    this.x = newX;
+    this.y = newY;
+    this.draw();
+    console.log("NEW APPLE GENERATED");
   }
 }
 
@@ -113,10 +130,13 @@ let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec
 function animate(timestamp) {
   requestAnimationFrame(animate); 
-  if(snake.outOfBounds() || apple.isOverlap(snake)) {
+  if(snake.outOfBounds()) {
     console.log("OUT OF BOUNDS!");
     snake.reset(apple);
     return; // exit the frame immediately
+  }
+  if(apple.isOverlap(snake)) {
+    apple.newApple(snake);
   }
   const deltaTime = timestamp - lastTime;
   // only update if 
@@ -133,25 +153,25 @@ let lastKeyDown;
 document.addEventListener("keydown", (event) => {
   if((event.key == "w" || event.key == "ArrowUp") &&  lastKeyDown !== event.key) {
     // snake cannot turn into itself 
-    if(lastKeyDown !=="s") {
+    if(lastKeyDown !=="s" || lastKeyDown !=="ArrowDown") {
       snake.updateDirection(0,-sizeOfSquare); 
     }
     lastKeyDown = event.key; // update lastKeyDown 
   }
   if((event.key == "a" || event.key == "ArrowLeft") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "d") {
+    if(lastKeyDown !== "d" || lastKeyDown !== "ArrowRight") {
       snake.updateDirection(-sizeOfSquare,0);
     }
     lastKeyDown = event.key;
   }
   if((event.key == "s" || event.key == "ArrowDown") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "w") {
+    if(lastKeyDown !== "w" || lastKeyDown !== "ArrowUp") {
       snake.updateDirection(0,sizeOfSquare);
     }    
     lastKeyDown = event.key;
   }
   if((event.key == "d" || event.key == "ArrowRight") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "a") {
+    if(lastKeyDown !== "a" || lastKeyDown !== "ArrowLeft") {
       snake.updateDirection(sizeOfSquare,0);
     }
     lastKeyDown = event.key;
