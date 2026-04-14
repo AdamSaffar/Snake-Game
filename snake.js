@@ -68,9 +68,13 @@ class Snake {
     lastKeyDown = "";
   }
   draw() {
-    fground.fillStyle = "#AAFF00";
     this.coords.forEach((seg) => {
+      fground.fillStyle = "#AAFF00";
       fground.fillRect(seg.x,seg.y,sizeOfSquare,sizeOfSquare);
+
+      fground.strokeStyle = "#006400"; // style border a darker green for contrast
+      fground.lineWidth = 2; // make border thicker
+      fground.strokeRect(seg.x + 1, seg.y + 1, sizeOfSquare - 2, sizeOfSquare - 2);
     });
   }
 
@@ -117,9 +121,14 @@ class Snake {
         }
       });
   }
-  
   won() {
-    totalSquareCount = (gameCanvas.width / sizeOfSquare) * (gameCanvas.height / sizeOfSquare);
+    const totalSquareCount = (gameCanvas.width / sizeOfSquare) * (gameCanvas.height / sizeOfSquare);
+    // we use totalSquareCount - 1 because we start with 1x1 snake
+    if(scoreCount === totalSquareCount - 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -134,6 +143,10 @@ class Apple {
   draw() {
     fground.fillStyle = "#FF002B";
     fground.fillRect(this.x,this.y,sizeOfSquare,sizeOfSquare);
+
+    fground.strokeStyle = "#680011";
+    fground.lineWidth = 2;
+    fground.strokeRect(this.x + 1,this.y + 1,sizeOfSquare - 2,sizeOfSquare - 2);
   }
   // returns true if snake "bit" apple
   bitApple(snake) {
@@ -185,6 +198,10 @@ function animate(timestamp) {
   if(deltaTime >= moveInterval) {
     const ateApple = apple.bitApple(snake);
     if(ateApple) {
+      if(snake.won()) {
+        console.log("YOU WON!");
+        return;
+      }
       apple.newApple(snake);
     }
     snake.update(ateApple);
