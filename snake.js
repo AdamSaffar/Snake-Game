@@ -2,9 +2,17 @@ const gridCanvas = document.querySelector('.static-grid');
 const gameCanvas = document.querySelector('.dynamic-foreground');
 gameCanvas.height = gridCanvas.height = 650; 
 gameCanvas.width = gridCanvas.width = 750;
-
-let sizeOfSquare = 50;
+// tracks global score count
 let scoreCount = 0;
+const scoreText = document.querySelector('.score-text');
+
+function generateScoreCard() {
+  scoreText.textContent = `
+    Score: ${scoreCount}
+  `;
+}
+let sizeOfSquare = 50;
+
 const bground = gridCanvas.getContext('2d');
 const fground = gameCanvas.getContext('2d');
 // 15 row
@@ -50,6 +58,7 @@ class Snake {
 
     // reset score countr
     scoreCount = 0;
+    generateScoreCard();
     // clear canvas
     fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
     this.draw();
@@ -78,6 +87,7 @@ class Snake {
       this.coords.pop();
     } else {
       scoreCount += 1; // add one to score count
+      generateScoreCard();
       console.log("Score: ", scoreCount);
     }
     this.draw();
@@ -104,10 +114,12 @@ class Snake {
         // if head coincides with the body there is overlap 
         if(this.coords[0].x === seg?.x && this.coords[0].y === seg?.y) {
           return true;
-        } else {
-          return false;
         }
       });
+  }
+  
+  won() {
+    totalSquareCount = (gameCanvas.width / sizeOfSquare) * (gameCanvas.height / sizeOfSquare);
   }
 }
 
@@ -154,7 +166,7 @@ const snake = new Snake();
 const apple = new Apple();
 apple.draw();
 snake.draw();
-
+generateScoreCard();
 let inputProcessed; 
 let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec

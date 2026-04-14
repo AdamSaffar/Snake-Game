@@ -3,17 +3,26 @@
   padding: 0;
   box-sizing: border-box;
 }
-div { 
+
+body {
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #222;
+}
+.game-container { 
   position: relative; /* Essential: This acts as the anchor for the canvases */
   width: 750px;       /* Must match canvas.width */
-  height: 600px;      /* Must match canvas.height */
-  
-  /* This is the easiest way to center the DIV itself on the page */
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 650px;      /* Must match canvas.height */
+
+}
+canvas {
+  position: absolute; 
+  top: 0;
+  left: 0;
 }
 .static-grid {
   position: absolute;
@@ -29,4 +38,14 @@ div {
   left: 0;
   top: 0;
   z-index: 1;
+}
+
+.score-card {
+  height: 100px;
+  width: 750px; 
+  background-color: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
