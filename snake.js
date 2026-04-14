@@ -123,8 +123,8 @@ class Snake {
   }
   won() {
     const totalSquareCount = (gameCanvas.width / sizeOfSquare) * (gameCanvas.height / sizeOfSquare);
-    // we use totalSquareCount - 1 because we start with 1x1 snake
-    if(scoreCount === totalSquareCount - 1) {
+    // we use + 1 since we start with 1x1 snake at score: 0
+    if(scoreCount + 1 === totalSquareCount) {
       return true;
     } else {
       return false;

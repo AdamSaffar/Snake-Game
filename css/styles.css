@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
 }
 
 body {
@@ -25,18 +28,12 @@ canvas {
   left: 0;
 }
 .static-grid {
-  position: absolute;
-  left: 0;
-  top: 0;
   z-index: 0;
-  border: 5px solid blue;
+  outline: 5px solid blue;
 } 
 
 .dynamic-foreground {
-  border: 5px solid red; 
-  position: absolute;
-  left: 0;
-  top: 0;
+  outline: 5px solid red; 
   z-index: 1;
 }
 
