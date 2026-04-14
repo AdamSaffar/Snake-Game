@@ -33,15 +33,13 @@ class Snake {
   dy = 0; 
   constructor() {
     // coordinates of snake origin
-    this.x = this.xOrigin;
-    this.y = this.yOrigin;
+    this.coords = [{x: this.xOrigin, y: this.yOrigin}];
     this.width = sizeOfSquare;
     this.height = sizeOfSquare;
   } 
   reset(apple) {
     // reset snake position to origin
-    this.x = this.xOrigin;
-    this.y = this.yOrigin; 
+    this.coords = [{x: this.xOrigin, y: this.yOrigin}];
     // reset velocity to 0
     this.dx = 0; 
     this.dy = 0; 
@@ -59,13 +57,25 @@ class Snake {
   }
   draw() {
     fground.fillStyle = "green";
-    fground.fillRect(this.x, this.y, sizeOfSquare, sizeOfSquare);
+    this.coords.forEach((seg) => {
+      fground.fillRect(seg.x,seg.y,sizeOfSquare,sizeOfSquare);
+    });
   }
 
-  update() {
-    fground.clearRect(this.x,this.y, sizeOfSquare, sizeOfSquare);
-    this.x += this.dx;
-    this.y += this.dy;
+  update(ateApple) {
+    const newHead = {
+      x: this.coords[0].x + this.dx,
+      y: this.coords[0].y + this.dy
+    };
+    // add newHead to beginning of array
+    this.coords.unshift(newHead);
+
+    if(!ateApple) {
+      // remove last element from array of coords
+      this.coords.pop();
+    } else {
+      console.log("Grew Snake!");
+    }
     this.draw();
 
   }
@@ -75,7 +85,8 @@ class Snake {
   }
 
   outOfBounds() {
-    if(this.x > gameCanvas.width || this.y > gameCanvas.height || this.x < 0 || this.y < 0) {
+    // checks if head of snake goes out of bounds
+    if(this.coords[0].x > gameCanvas.width || this.coords[0].y > gameCanvas.height || this.coords[0].x < 0 || this.coords[0].y < 0) {
       return true; 
     } else {
       return false; 
@@ -96,8 +107,9 @@ class Apple {
     fground.fillRect(this.x,this.y,sizeOfSquare,sizeOfSquare);
   }
   // returns true if snake "bit" apple
-  isOverlap(snake) {
-    if(snake.x === apple.x && snake.y === apple.y) {
+  bitApple(snake) {
+    // if head of snake coords coincide with apple 
+    if(snake.coords[0].x === apple.x && snake.coords[0].y === apple.y) {
       console.log("SNAKE BIT APPLE");
       return true;
     }
@@ -111,7 +123,7 @@ class Apple {
     do {
       newX = Math.floor(Math.random() * (gameCanvas.width / sizeOfSquare)) * sizeOfSquare;
       newY = Math.floor(Math.random() * (gameCanvas.height / sizeOfSquare)) * sizeOfSquare;
-    } while(newX === snake.x && newY === snake.y);
+    } while(newX === snake.coords[0].x && newY === snake.coords[0].y);
     this.x = newX;
     this.y = newY;
     this.draw();
@@ -130,20 +142,25 @@ let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec
 function animate(timestamp) {
   requestAnimationFrame(animate); 
+  // Always clear snake+apple at the start of every frame
+  fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
   if(snake.outOfBounds()) {
     console.log("OUT OF BOUNDS!");
     snake.reset(apple);
     return; // exit the frame immediately
   }
-  if(apple.isOverlap(snake)) {
-    apple.newApple(snake);
-  }
   const deltaTime = timestamp - lastTime;
   // only update if 
   if(deltaTime >= moveInterval) {
-    snake.update();
+    const ateApple = apple.bitApple(snake);
+    if(ateApple) {
+      apple.newApple(snake);
+    }
+    snake.update(ateApple);
     lastTime = timestamp; 
   }
+  apple.draw();
+  snake.draw();
 }
 animate(0); // pass an initial 0 to start the clock
 
