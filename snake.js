@@ -86,7 +86,7 @@ class Snake {
 
   outOfBounds() {
     // checks if head of snake goes out of bounds
-    if(this.coords[0].x > gameCanvas.width || this.coords[0].y > gameCanvas.height || this.coords[0].x < 0 || this.coords[0].y < 0) {
+    if(this.coords[0].x >= gameCanvas.width || this.coords[0].y >= gameCanvas.height || this.coords[0].x < 0 || this.coords[0].y < 0) {
       return true; 
     } else {
       return false; 
@@ -130,17 +130,19 @@ class Apple {
   }
   newApple(snake) {
     // no need to call clearRect() on apple, snake already clears apple
-    let newX;
-    let newY;
+    let newX, newY;
+    let isTouchingSnake; 
     // keep rolling if new X & Y are equal to snake position
     do {
       newX = Math.floor(Math.random() * (gameCanvas.width / sizeOfSquare)) * sizeOfSquare;
       newY = Math.floor(Math.random() * (gameCanvas.height / sizeOfSquare)) * sizeOfSquare;
-    } while(newX === snake.coords[0].x && newY === snake.coords[0].y);
+      isTouchingSnake = snake.coords.some((seg) => seg.x === newX && seg.y === newY);
+    } while(isTouchingSnake);
     this.x = newX;
     this.y = newY;
     this.draw();
     console.log("NEW APPLE GENERATED");
+
   }
 }
 
@@ -150,7 +152,7 @@ const apple = new Apple();
 apple.draw();
 snake.draw();
 
-//const apple = new Apple();
+let inputProcessed; 
 let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec
 function animate(timestamp) {
@@ -171,7 +173,8 @@ function animate(timestamp) {
       apple.newApple(snake);
     }
     snake.update(ateApple);
-    lastTime = timestamp; 
+    lastTime = timestamp;
+    inputProcessed = false; // reset state of inputProcessed 
   }
   apple.draw();
   snake.draw();
@@ -181,30 +184,38 @@ animate(0); // pass an initial 0 to start the clock
 // if last keystroke is the same, no change needed
 let lastKeyDown;
 // captures users keystroke inputs
+
 document.addEventListener("keydown", (event) => {
+  if(inputProcessed) {
+    return; // if we already captured input for this frame, don't capture another input
+  }
   if((event.key == "w" || event.key == "ArrowUp") &&  lastKeyDown !== event.key) {
     // snake cannot turn into itself 
     if(lastKeyDown !=="s" && lastKeyDown !=="ArrowDown") {
       snake.updateDirection(0,-sizeOfSquare); 
       lastKeyDown = event.key; // update lastKeyDown 
+      inputProcessed = true; 
     }
   }
   if((event.key == "a" || event.key == "ArrowLeft") && lastKeyDown !== event.key) {
     if(lastKeyDown !== "d" && lastKeyDown !== "ArrowRight") {
       snake.updateDirection(-sizeOfSquare,0);
       lastKeyDown = event.key;
+      inputProcessed = true;
     }
   }
   if((event.key == "s" || event.key == "ArrowDown") && lastKeyDown !== event.key) {
     if(lastKeyDown !== "w" && lastKeyDown !== "ArrowUp") {
       snake.updateDirection(0,sizeOfSquare);
       lastKeyDown = event.key;
+      inputProcessed = true;
     }    
   }
   if((event.key == "d" || event.key == "ArrowRight") && lastKeyDown !== event.key) {
     if(lastKeyDown !== "a" && lastKeyDown !== "ArrowLeft") {
       snake.updateDirection(sizeOfSquare,0);
       lastKeyDown = event.key;
+      inputProcessed = true;
     }
   }
 });
