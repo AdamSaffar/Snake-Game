@@ -92,6 +92,19 @@ class Snake {
       return false; 
     }
   }
+
+  isOverlap() {
+    // slice() method creates a temp copy of the array starting from the second element
+    return this.coords?.slice(1)
+      .some((seg) => {
+        // if head coincides with the body there is overlap 
+        if(this.coords[0].x === seg?.x && this.coords[0].y === seg?.y) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+  }
 }
 
 class Apple {
@@ -144,8 +157,9 @@ function animate(timestamp) {
   requestAnimationFrame(animate); 
   // Always clear snake+apple at the start of every frame
   fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
-  if(snake.outOfBounds()) {
-    console.log("OUT OF BOUNDS!");
+  // conditions to end game: out of bounds or overlap
+  if(snake.outOfBounds()  || snake.isOverlap()) {
+    console.log("GAME OVER!");
     snake.reset(apple);
     return; // exit the frame immediately
   }
