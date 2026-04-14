@@ -153,27 +153,27 @@ let lastKeyDown;
 document.addEventListener("keydown", (event) => {
   if((event.key == "w" || event.key == "ArrowUp") &&  lastKeyDown !== event.key) {
     // snake cannot turn into itself 
-    if(lastKeyDown !=="s" || lastKeyDown !=="ArrowDown") {
+    if(lastKeyDown !=="s" && lastKeyDown !=="ArrowDown") {
       snake.updateDirection(0,-sizeOfSquare); 
+      lastKeyDown = event.key; // update lastKeyDown 
     }
-    lastKeyDown = event.key; // update lastKeyDown 
   }
   if((event.key == "a" || event.key == "ArrowLeft") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "d" || lastKeyDown !== "ArrowRight") {
+    if(lastKeyDown !== "d" && lastKeyDown !== "ArrowRight") {
       snake.updateDirection(-sizeOfSquare,0);
+      lastKeyDown = event.key;
     }
-    lastKeyDown = event.key;
   }
   if((event.key == "s" || event.key == "ArrowDown") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "w" || lastKeyDown !== "ArrowUp") {
+    if(lastKeyDown !== "w" && lastKeyDown !== "ArrowUp") {
       snake.updateDirection(0,sizeOfSquare);
+      lastKeyDown = event.key;
     }    
-    lastKeyDown = event.key;
   }
   if((event.key == "d" || event.key == "ArrowRight") && lastKeyDown !== event.key) {
-    if(lastKeyDown !== "a" || lastKeyDown !== "ArrowLeft") {
+    if(lastKeyDown !== "a" && lastKeyDown !== "ArrowLeft") {
       snake.updateDirection(sizeOfSquare,0);
+      lastKeyDown = event.key;
     }
-    lastKeyDown = event.key;
   }
 });
