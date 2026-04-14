@@ -4,7 +4,7 @@ gameCanvas.height = gridCanvas.height = 650;
 gameCanvas.width = gridCanvas.width = 750;
 
 let sizeOfSquare = 50;
-
+let scoreCount = 0;
 const bground = gridCanvas.getContext('2d');
 const fground = gameCanvas.getContext('2d');
 // 15 row
@@ -47,6 +47,9 @@ class Snake {
     // reset apple position to origin
     apple.x = apple.xOrigin;
     apple.y = apple.yOrigin; 
+
+    // reset score countr
+    scoreCount = 0;
     // clear canvas
     fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
     this.draw();
@@ -56,7 +59,7 @@ class Snake {
     lastKeyDown = "";
   }
   draw() {
-    fground.fillStyle = "green";
+    fground.fillStyle = "#AAFF00";
     this.coords.forEach((seg) => {
       fground.fillRect(seg.x,seg.y,sizeOfSquare,sizeOfSquare);
     });
@@ -74,7 +77,8 @@ class Snake {
       // remove last element from array of coords
       this.coords.pop();
     } else {
-      console.log("Grew Snake!");
+      scoreCount += 1; // add one to score count
+      console.log("Score: ", scoreCount);
     }
     this.draw();
 
@@ -116,7 +120,7 @@ class Apple {
     this.y = this.yOrigin;
   }
   draw() {
-    fground.fillStyle = "red";
+    fground.fillStyle = "#FF002B";
     fground.fillRect(this.x,this.y,sizeOfSquare,sizeOfSquare);
   }
   // returns true if snake "bit" apple
@@ -142,7 +146,6 @@ class Apple {
     this.y = newY;
     this.draw();
     console.log("NEW APPLE GENERATED");
-
   }
 }
 
@@ -159,9 +162,9 @@ function animate(timestamp) {
   requestAnimationFrame(animate); 
   // Always clear snake+apple at the start of every frame
   fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
-  // conditions to end game: out of bounds or overlap
-  if(snake.outOfBounds()  || snake.isOverlap()) {
-    console.log("GAME OVER!");
+  // conditions for loss
+  if(snake.outOfBounds() || snake.isOverlap()) {
+    console.log("GAME OVER! Total Score: ", scoreCount);
     snake.reset(apple);
     return; // exit the frame immediately
   }
