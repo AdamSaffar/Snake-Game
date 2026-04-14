@@ -29,8 +29,8 @@ class Snake {
   // Snake class fields
   xOrigin = sizeOfSquare * 5;  
   yOrigin = sizeOfSquare * 7;
-  dx = 50; 
-  dy = 50; 
+  dx = 0; 
+  dy = 0; 
   constructor(x, y) {
     // coordinates of snake origin
     this.x = x;
@@ -47,8 +47,13 @@ class Snake {
   update() {
     fground.clearRect(this.x,this.y, sizeOfSquare, sizeOfSquare);
     this.x += this.dx;
+    this.y += this.dy;
     this.draw();
 
+  }
+  updateDirection(dx, dy) {
+    this.dx = dx;
+    this.dy = dy;
   }
 }
 
@@ -59,12 +64,13 @@ class Apple {
   }
 }
 
+
 const snake = new Snake(sizeOfSquare * 5, sizeOfSquare * 7); 
 snake.draw();
 
 //const apple = new Apple();
 let lastTime = 0;
-let moveInterval = 1000; // 1000ms = 1 s
+let moveInterval = 500; // 1000ms = 1 s
 function animate(timestamp) {
   requestAnimationFrame(animate); 
 
@@ -96,18 +102,18 @@ let lastKeyDown;
 document.addEventListener("keydown", (event) => {
   if((event.key == "w" || event.key == "ArrowUp") &&  lastKeyDown !== event.key) {
     lastKeyDown = event.key; // update lastKeyDown 
-    console.log(event.key);
+    snake.updateDirection(0,-sizeOfSquare); 
   }
   if((event.key == "a" || event.key == "ArrowLeft") && lastKeyDown !== event.key) {
     lastKeyDown = event.key;
-    console.log(event.key);
+    snake.updateDirection(-sizeOfSquare,0);
   }
   if((event.key == "s" || event.key == "ArrowDown") && lastKeyDown !== event.key) {
     lastKeyDown = event.key;
-    console.log(event.key);
+    snake.updateDirection(0,sizeOfSquare);
   }
   if((event.key == "d" || event.key == "ArrowRight") && lastKeyDown !== event.key) {
     lastKeyDown = event.key;
-    console.log(event.key);
+    snake.updateDirection(sizeOfSquare,0);
   }
 });
