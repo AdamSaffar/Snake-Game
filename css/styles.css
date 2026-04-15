@@ -46,3 +46,56 @@ canvas {
   align-items: center;
   color: white;
 }
+
+.win-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 2;
+  
+  height: 300px;
+  width: 450px;
+  background-color: red;
+  border-width: 2px;
+  border-color:white;
+  border-radius: 50px;
+}
+
+#win-message {
+  display: flex;
+  justify-content: center;
+
+  padding: 10px 0px;
+}
+
+#play-again {
+  cursor: pointer !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 10px;
+  width: 175px;
+  height: 60px;
+
+  background-color: rgb(255, 255, 255);
+  border-color: rgb(255, 255, 255);
+  list-style-type: none;
+
+}
+
+nav ul li a{
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#play-again:hover {
+  background-color: rgb(175, 169, 169);
+}

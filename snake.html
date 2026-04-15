@@ -12,10 +12,23 @@
     <div class = "game-container">
       <canvas class = "static-grid"></canvas>
       <canvas class = "dynamic-foreground"></canvas>
+
+      <div class = "win-container" style = "display:none;">
+        <div>
+          <label id = "win-message">YOU WIN!</label>
+          <img>
+        </div>
+        <nav>
+          <ul>
+            <li id = "play-again"><a href = "#">Play Again</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
     <div class = "score-card">
       <p class = "score-text">Score: 0</p>
     </div>
+
     <script src = "snake.js"></script>
   </body>
 </html>

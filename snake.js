@@ -5,7 +5,19 @@ gameCanvas.width = gridCanvas.width = 750;
 // tracks global score count
 let scoreCount = 0;
 const scoreText = document.querySelector('.score-text');
+const winContainer = document.querySelector('.win-container');
+const playAgainBtn = document.getElementById('play-again');
 
+playAgainBtn.addEventListener('click', (event) => {
+  event.preventDefault();
+  winContainer.style.display = "none";
+  snake.reset(apple);
+  
+  requestAnimationFrame((newTime) => {
+    lastTime = newTime;
+    animate(newTime);
+  });
+});
 function generateScoreCard() {
   scoreText.textContent = `
     Score: ${scoreCount}
@@ -123,8 +135,8 @@ class Snake {
   }
   won() {
     const totalSquareCount = (gameCanvas.width / sizeOfSquare) * (gameCanvas.height / sizeOfSquare);
-    // we use + 1 since we start with 1x1 snake at score: 0
-    if(scoreCount + 1 === totalSquareCount) {
+    if(this.coords.length === totalSquareCount) {
+      winContainer.style.display = "flex";
       return true;
     } else {
       return false;
@@ -184,32 +196,39 @@ let inputProcessed;
 let lastTime = 0;
 let moveInterval = 100; // 500ms = 0.5 sec
 function animate(timestamp) {
-  requestAnimationFrame(animate); 
-  // Always clear snake+apple at the start of every frame
-  fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
   // conditions for loss
   if(snake.outOfBounds() || snake.isOverlap()) {
     console.log("GAME OVER! Total Score: ", scoreCount);
     snake.reset(apple);
-    return; // exit the frame immediately
+    
+    lastTime = timestamp; 
   }
+  // Always clear snake+apple at the start of every frame
+  fground.clearRect(0,0,gameCanvas.width,gameCanvas.height);
+
   const deltaTime = timestamp - lastTime;
   // only update if 
   if(deltaTime >= moveInterval) {
     const ateApple = apple.bitApple(snake);
+    // UPDATE SNAKE FIRST
+    snake.update(ateApple);
+    // Check win state after update
+    if(snake.won()) {
+      console.log("YOU WON!");
+      return;
+    }
+    // Spawn apple only if we haven't won
     if(ateApple) {
-      if(snake.won()) {
-        console.log("YOU WON!");
-        return;
-      }
       apple.newApple(snake);
     }
-    snake.update(ateApple);
     lastTime = timestamp;
-    inputProcessed = false; // reset state of inputProcessed 
+    inputProcessed = false; // reset state to capture new inputs
   }
+  // draw current state
   apple.draw();
   snake.draw();
+  // lastly -> request new frame
+  requestAnimationFrame(animate); 
 }
 animate(0); // pass an initial 0 to start the clock
 
